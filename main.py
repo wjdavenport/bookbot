@@ -1,3 +1,5 @@
+import re
+
 def hello_world():
     print("Hello, world!")
 
@@ -9,18 +11,24 @@ def hello_world():
 def sort_on(dict):
     return dict["number"]
 
+text_title = "frankenstein.txt"
+path_to_text = "books/"
+
 def main():
-    with open("books/frankenstein.txt") as f:
+    with open(path_to_text + text_title) as f:
         file_contents = f.read()
 
     word_list = file_contents.split()
-    print(len(word_list))
+    print(f"\n--- Report on {text_title} ---\n")
+    print(f"{len(word_list)} words in this file.")
+    print(f"Indexing words and characters...\n")
 
     word_dict = {}
     char_dict = {}
 
     for word in word_list:
         word = word.lower()
+        word = re.sub(r'\W+', '', word)
         if word in word_dict:
             word_dict[word] += 1
         else:
@@ -47,11 +55,16 @@ def main():
     word_count_list.sort(reverse=True, key=sort_on)
     char_count_list.sort(reverse=True, key=sort_on)
 
+    print(f"Report on word frequency > 15 in {text_title}:")
     for entry in word_count_list:
-        print(f"{entry['word']} {entry['number']}")
-    for entry in char_count_list:
-        print(f"{entry['alphachar']} {entry['number']}")
+        if entry['number'] > 15:
+            print(f"{entry['word']} {entry['number']}")
 
+    print()
+    print(f"Report on character frequency in {text_title}:")
+    for entry in char_count_list:
+        print(f"The '{entry['alphachar']}' character was found {entry['number']} times")
+    print("--- End report ---")
     
 
     
